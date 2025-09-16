@@ -16,10 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +34,7 @@ urlpatterns = [
     path('api/auth/', include('users.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-]
+    path('panel/', include('tasks.admin_urls')),
+    path('login/', LoginView.as_view(template_name='auth/login.html'), name='login'),
+    path('', LoginView.as_view(template_name='auth/login.html'), name='home'),
+    path('logout/', logout_view, name='logout'),]

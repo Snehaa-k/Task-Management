@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h1>Assign User to Admin</h1>
+    <p><strong>User:</strong> {{ user_obj.username }} ({{ user_obj.email }})</p>
+    <p><strong>Current Manager:</strong> {{ user_obj.admin.username|default:"None" }}</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="admin_id">Select Admin Manager:</label>
+            <select name="admin_id" id="admin_id" class="form-control">
+                <option value="">-- No Manager --</option>
+                {% for admin in admins %}
+                    <option value="{{ admin.id }}" {% if user_obj.admin.id == admin.id %}selected{% endif %}>
+                        {{ admin.username }} ({{ admin.email }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit" class="btn btn-success">Assign User</button>
+            <a href="{% url 'users_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

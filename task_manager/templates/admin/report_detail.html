@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>Completion Report: {{ task.title }}</h1>
+        <div>
+            <a href="{% url 'task_detail' task.id %}" class="btn">View Task</a>
+            <a href="{% url 'reports_list' %}" class="btn btn-secondary">Back to Reports</a>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+        <div>
+            <h3>Task Summary</h3>
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 4px;">
+                <p><strong>Task Title:</strong> {{ task.title }}</p>
+                <p><strong>Assigned To:</strong> {{ task.assigned_to.username }}</p>
+                <p><strong>Due Date:</strong> 
+                    {% if task.due_date %}
+                        {{ task.due_date|date:"F d, Y H:i" }}
+                    {% else %}
+                        No due date
+                    {% endif %}
+                </p>
+                <p><strong>Completed On:</strong> {{ task.updated_at|date:"F d, Y H:i" }}</p>
+                <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">{{ task.get_status_display }}</span></p>
+            </div>
+            
+            <h4 style="margin-top: 20px;">Task Description</h4>
+            <div style="background: #e9ecef; padding: 15px; border-radius: 4px;">
+                {{ task.description|linebreaks }}
+            </div>
+        </div>
+        
+        <div>
+            <h3>Completion Details</h3>
+            <div style="background: #d4edda; padding: 20px; border-radius: 4px; border: 1px solid #c3e6cb;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2 style="color: #28a745; margin: 0;">{{ task.worked_hours }} Hours</h2>
+                    <p style="color: #155724; margin: 5px 0;">Total Time Worked</p>
+                </div>
+                
+                <h4>Completion Report</h4>
+                <div style="background: white; padding: 15px; border-radius: 4px; border: 1px solid #c3e6cb;">
+                    {% if task.completion_report %}
+                        {{ task.completion_report|linebreaks }}
+                    {% else %}
+                        <em style="color: #6c757d;">No completion report provided.</em>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if user.is_superuser %}
+            <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 4px; border: 1px solid #ffeaa7;">
+                <h5>Admin Actions</h5>
+                <p style="font-size: 0.9em; color: #856404;">As a SuperAdmin, you have full access to this report and can take further actions if needed.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

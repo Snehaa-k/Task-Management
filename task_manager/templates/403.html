@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Access Denied - Task Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f8f9fa; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 100px auto; text-align: center; }
+        .error-card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .error-code { font-size: 4em; color: #dc3545; font-weight: bold; margin: 0; }
+        .error-message { font-size: 1.2em; color: #6c757d; margin: 20px 0; }
+        .btn { padding: 12px 24px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; display: inline-block; margin: 10px; }
+        .btn-secondary { background: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-card">
+            <div class="error-code">403</div>
+            <h2>Access Denied</h2>
+            <p class="error-message">
+                You don't have permission to access this page. 
+                Please contact your administrator if you believe this is an error.
+            </p>
+            
+            <div style="margin-top: 30px;">
+                <a href="{% url 'dashboard' %}" class="btn">Go to Dashboard</a>
+                <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+            </div>
+            
+            <div style="margin-top: 20px; font-size: 0.9em; color: #6c757d;">
+                {% if user.is_authenticated %}
+                    <p>Logged in as: <strong>{{ user.username }}</strong> 
+                    ({% if user.is_superuser %}SuperAdmin{% else %}{{ user.get_role_display }}{% endif %})</p>
+                {% else %}
+                    <p>You are not logged in. <a href="{% url 'login' %}">Login here</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+    <h1>Task Completion Reports</h1>
+    <p>View completion reports and worked hours for completed tasks.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Task Title</th>
+                <th>Assigned To</th>
+                <th>Completed Date</th>
+                <th>Worked Hours</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in completed_tasks %}
+            <tr>
+                <td>
+                    <a href="{% url 'report_detail' task.id %}" style="text-decoration: none; color: #007bff;">
+                        {{ task.title }}
+                    </a>
+                </td>
+                <td>{{ task.assigned_to.username }}</td>
+                <td>{{ task.updated_at|date:"M d, Y H:i" }}</td>
+                <td>
+                    <span style="font-weight: bold; color: #28a745;">{{ task.worked_hours }} hours</span>
+                </td>
+                <td>
+                    <a href="{% url 'report_detail' task.id %}" class="btn">View Report</a>
+                    <a href="{% url 'task_detail' task.id %}" class="btn btn-secondary">View Task</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: #6c757d;">No completed tasks found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {% if completed_tasks %}
+    <div style="margin-top: 20px; padding: 15px; background: #e9ecef; border-radius: 4px;">
+        <h4>Summary</h4>
+        <p><strong>Total Completed Tasks:</strong> {{ completed_tasks|length }}</p>
+        <p><strong>Total Hours Worked:</strong> {{ total_hours }} hours</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
